@@ -1,4 +1,0 @@
-# Break Complete Sound File
-# This is a placeholder for the break session completion sound
-# In production, this would be replaced with an actual MP3 audio file
-# The NotificationService will fall back to generated sounds if this file is not available

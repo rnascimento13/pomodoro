@@ -15,16 +15,28 @@ export class NotificationService {
   private soundEnabled: boolean = true;
   private notificationsEnabled: boolean = true;
   private permissionGranted: boolean = false;
+  private audioInitialized: boolean = false;
 
   constructor() {
-    this.initializeAudioContext();
     this.checkNotificationPermission();
+    // Don't initialize AudioContext until user interaction
   }
 
-  private initializeAudioContext(): void {
+  private async initializeAudioContext(): Promise<void> {
+    if (this.audioInitialized || this.audioContext) {
+      return;
+    }
+
     try {
       // Create AudioContext for better audio control
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      // Resume AudioContext if it's suspended (required by browsers)
+      if (this.audioContext.state === 'suspended') {
+        await this.audioContext.resume();
+      }
+      
+      this.audioInitialized = true;
     } catch (error) {
       console.warn('AudioContext not supported:', error);
     }
@@ -156,6 +168,9 @@ export class NotificationService {
     }
 
     try {
+      // Initialize AudioContext on first use (requires user interaction)
+      await this.initializeAudioContext();
+
       // Try to play using AudioContext first for better control
       if (this.audioContext && this.audioBuffers.has(soundType)) {
         await this.playAudioBuffer(soundType);
@@ -166,8 +181,9 @@ export class NotificationService {
       await this.playAudioElement(soundType);
     } catch (error) {
       console.error('Error playing sound:', error);
-      // Try beep as final fallback
-      this.playBeep();
+      // Try generated sound as final fallback
+      await this.initializeAudioContext();
+      this.playGeneratedSound(soundType);
     }
   }
 
@@ -184,28 +200,9 @@ export class NotificationService {
   }
 
   private async playAudioElement(soundType: SoundType): Promise<void> {
-    const audioUrl = this.getAudioUrl(soundType);
-    const audio = new Audio(audioUrl);
-    
-    // Set volume to a reasonable level
-    audio.volume = 0.7;
-    
-    return new Promise((resolve, reject) => {
-      const handleError = () => {
-        // If audio file fails to load, fall back to generated sound
-        this.playGeneratedSound(soundType);
-        resolve();
-      };
-
-      audio.addEventListener('ended', () => resolve());
-      audio.addEventListener('error', handleError);
-      audio.addEventListener('canplaythrough', () => {
-        audio.play().catch(handleError);
-      });
-
-      // Try to load the audio
-      audio.load();
-    });
+    // Skip trying to load placeholder audio files - use generated sounds directly
+    // The current audio files are just text placeholders, not real MP3 files
+    this.playGeneratedSound(soundType);
   }
 
   private playGeneratedSound(soundType: SoundType): void {
@@ -328,35 +325,25 @@ export class NotificationService {
   }
 
   private getAudioUrl(soundType: SoundType): string {
-    // Map sound types to audio file URLs
-    const soundMap = {
+    // Map sound types to audio file URLs (only for files that exist)
+    const soundMap: Partial<Record<SoundType, string>> = {
       [SoundType.WORK_COMPLETE]: '/sounds/work-complete.mp3',
-      [SoundType.BREAK_COMPLETE]: '/sounds/break-complete.mp3',
-      [SoundType.TICK]: '/sounds/tick.mp3'
+      [SoundType.BREAK_COMPLETE]: '/sounds/break-complete.mp3'
+      // TICK sound will use generated sound since file doesn't exist
     };
 
-    return soundMap[soundType] || '/sounds/default.mp3';
+    return soundMap[soundType] || '';
   }
 
   public async loadAudioFiles(): Promise<void> {
+    // Initialize AudioContext first
+    await this.initializeAudioContext();
+    
     if (!this.audioContext) return;
 
-    const soundTypes = [SoundType.WORK_COMPLETE, SoundType.BREAK_COMPLETE, SoundType.TICK];
-    
-    for (const soundType of soundTypes) {
-      try {
-        const audioUrl = this.getAudioUrl(soundType);
-        const response = await fetch(audioUrl);
-        
-        if (response.ok) {
-          const arrayBuffer = await response.arrayBuffer();
-          const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-          this.audioBuffers.set(soundType, audioBuffer);
-        }
-      } catch (error) {
-        console.warn(`Failed to load audio file for ${soundType}:`, error);
-      }
-    }
+    // Skip loading placeholder audio files - use generated sounds instead
+    // The current audio files are just text placeholders, not real MP3 files
+    console.log('Using generated audio sounds for notifications');
   }
 
   public setSoundEnabled(enabled: boolean): void {
