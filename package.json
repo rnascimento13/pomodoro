@@ -1,0 +1,68 @@
+{
+  "name": "pomodoro-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/node": "^16.18.0",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4",
+    "workbox-background-sync": "^6.5.4",
+    "workbox-broadcast-update": "^6.5.4",
+    "workbox-cacheable-response": "^6.5.4",
+    "workbox-core": "^6.5.4",
+    "workbox-expiration": "^6.5.4",
+    "workbox-google-analytics": "^6.5.4",
+    "workbox-navigation-preload": "^6.5.4",
+    "workbox-precaching": "^6.5.4",
+    "workbox-range-requests": "^6.5.4",
+    "workbox-routing": "^6.5.4",
+    "workbox-strategies": "^6.5.4",
+    "workbox-streams": "^6.5.4"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "lighthouse": "^12.8.1",
+    "serve": "^14.2.4",
+    "source-map-explorer": "^2.5.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "analyze": "npm run build && npx serve -s build",
+    "build:analyze": "npm run build && npx source-map-explorer 'build/static/js/*.js'",
+    "lighthouse": "npm run build && npx serve -s build -p 3001 & sleep 3 && npx lighthouse http://localhost:3001 --output=html --output-path=./lighthouse-report.html --chrome-flags='--headless' && pkill -f 'serve'",
+    "lighthouse:pwa": "npm run build && npx serve -s build -p 3001 & sleep 3 && npx lighthouse http://localhost:3001 --only-categories=pwa --output=html --output-path=./lighthouse-pwa-report.html --chrome-flags='--headless' && pkill -f 'serve'",
+    "optimize": "npm run build && node build-optimization.js",
+    "optimize:full": "npm run build && npm run build:analyze && node build-optimization.js",
+    "serve": "npx serve -s build",
+    "validate:pwa": "npm run build && node build-optimization.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

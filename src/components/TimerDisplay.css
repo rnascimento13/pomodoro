@@ -1,0 +1,188 @@
+.timer-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: 320px;
+}
+
+.timer-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Circular Progress Ring */
+.progress-ring {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.progress-ring-background {
+  stroke: #e2e8f0;
+  opacity: 0.3;
+}
+
+.progress-ring-progress {
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-ring-progress.running {
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* Timer Content */
+.timer-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 200px;
+  height: 200px;
+}
+
+.session-type {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.time-display {
+  font-size: 3.5rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.timer-status {
+  font-size: 0.875rem;
+  color: #718096;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Session Type Specific Styling */
+.timer-display[data-session-type="work"] {
+  --session-color: #e53e3e;
+}
+
+.timer-display[data-session-type="short_break"] {
+  --session-color: #38a169;
+}
+
+.timer-display[data-session-type="long_break"] {
+  --session-color: #3182ce;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .timer-display {
+    padding: 1rem;
+    min-height: 280px;
+  }
+  
+  .progress-ring {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .timer-content {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .time-display {
+    font-size: 2.5rem;
+  }
+  
+  .session-type {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-display {
+    padding: 0.5rem;
+    min-height: 240px;
+  }
+  
+  .progress-ring {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .timer-content {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .time-display {
+    font-size: 2rem;
+  }
+  
+  .session-type {
+    font-size: 0.75rem;
+  }
+  
+  .timer-status {
+    font-size: 0.75rem;
+  }
+}
+
+/* Animation for state transitions */
+.timer-display {
+  transition: all 0.3s ease;
+}
+
+.timer-content > * {
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Pulse animation for running state */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.progress-ring-progress.running {
+  animation: pulse 2s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .progress-ring-progress,
+  .timer-content > *,
+  .timer-display {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .progress-ring-background {
+    stroke: #000;
+    opacity: 0.5;
+  }
+  
+  .timer-status {
+    color: #000;
+  }
+}

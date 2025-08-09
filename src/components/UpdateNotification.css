@@ -1,0 +1,215 @@
+.update-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+.update-notification--offline {
+  background: linear-gradient(135deg, #48bb78, #38a169);
+  color: white;
+  border: none;
+}
+
+.update-notification--error {
+  background: linear-gradient(135deg, #f56565, #e53e3e);
+  color: white;
+  border: none;
+}
+
+.update-notification--updating {
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  border: none;
+}
+
+.update-notification__content {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.update-notification__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.update-notification__spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.update-notification__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.update-notification__text strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #1a202c;
+}
+
+.update-notification--offline .update-notification__text strong,
+.update-notification--error .update-notification__text strong,
+.update-notification--updating .update-notification__text strong {
+  color: white;
+}
+
+.update-notification__text p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a5568;
+}
+
+.update-notification--offline .update-notification__text p,
+.update-notification--error .update-notification__text p,
+.update-notification--updating .update-notification__text p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.update-notification__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-shrink: 0;
+}
+
+.update-notification__button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  min-width: 80px;
+}
+
+.update-notification__button:focus {
+  outline: 2px solid #4299e1;
+  outline-offset: 2px;
+}
+
+.update-notification__button--primary {
+  background: #4299e1;
+  color: white;
+}
+
+.update-notification__button--primary:hover {
+  background: #3182ce;
+  transform: translateY(-1px);
+}
+
+.update-notification__button--primary:active {
+  transform: translateY(0);
+}
+
+.update-notification__button--secondary {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.update-notification__button--secondary:hover {
+  background: #edf2f7;
+  border-color: #cbd5e0;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile responsive */
+@media (max-width: 480px) {
+  .update-notification {
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    border-radius: 8px;
+  }
+  
+  .update-notification__content {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .update-notification__actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .update-notification__button {
+    width: 100%;
+    padding: 12px 16px;
+  }
+  
+  .update-notification__text strong {
+    font-size: 15px;
+  }
+  
+  .update-notification__text p {
+    font-size: 13px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .update-notification {
+    border: 2px solid #000;
+  }
+  
+  .update-notification__button--primary {
+    background: #000;
+    border: 2px solid #000;
+  }
+  
+  .update-notification__button--secondary {
+    background: #fff;
+    border: 2px solid #000;
+    color: #000;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .update-notification {
+    animation: none;
+  }
+  
+  .update-notification__button {
+    transition: none;
+  }
+  
+  .update-notification__button--primary:hover {
+    transform: none;
+  }
+}
