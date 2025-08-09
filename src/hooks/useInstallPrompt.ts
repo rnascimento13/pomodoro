@@ -15,6 +15,7 @@ interface InstallPromptState {
   showPrompt: boolean;
   installApp: () => Promise<boolean>;
   dismissPrompt: () => void;
+  triggerPromptOnInteraction: () => void;
 }
 
 export const useInstallPrompt = (): InstallPromptState => {
@@ -22,6 +23,8 @@ export const useInstallPrompt = (): InstallPromptState => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [interactionCount, setInteractionCount] = useState(0);
+  const [reminderTimer, setReminderTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Check if user previously dismissed the prompt
   const checkDismissalStatus = () => {
@@ -30,8 +33,8 @@ export const useInstallPrompt = (): InstallPromptState => {
       const dismissedDate = new Date(dismissedPrompt);
       const daysSinceDismissed = (Date.now() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
       
-      // Don't show prompt again for 7 days
-      return daysSinceDismissed < 7;
+      // Show prompt again after just 1 day (aggressive)
+      return daysSinceDismissed < 1;
     }
     return false;
   };
@@ -59,13 +62,13 @@ export const useInstallPrompt = (): InstallPromptState => {
       setDeferredPrompt(event);
       setIsInstallable(true);
       
-      // Show install prompt after a delay (better UX) if not recently dismissed
+      // Show install prompt immediately (aggressive) if not recently dismissed
       setTimeout(() => {
         const wasRecentlyDismissed = checkDismissalStatus();
         if (!isInstalled && !wasRecentlyDismissed) {
           setShowPrompt(true);
         }
-      }, 3000);
+      }, 1000);
     };
 
     // Listen for app installed event
@@ -79,7 +82,50 @@ export const useInstallPrompt = (): InstallPromptState => {
       localStorage.setItem('pwa-installed', 'true');
     };
 
+    // Aggressive: Track user interactions to show prompt again
+    const handleUserInteraction = () => {
+      if (!isInstalled && isInstallable && !showPrompt) {
+        setInteractionCount(prev => {
+          const newCount = prev + 1;
+          // Show prompt every 5 interactions (very aggressive)
+          if (newCount % 5 === 0) {
+            const wasRecentlyDismissed = checkDismissalStatus();
+            if (!wasRecentlyDismissed) {
+              setTimeout(() => setShowPrompt(true), 500);
+            }
+          }
+          return newCount;
+        });
+      }
+    };
 
+    // Add interaction listeners for aggressive prompting
+    const interactionEvents = ['click', 'keydown', 'touchstart'];
+    interactionEvents.forEach(event => {
+      document.addEventListener(event, handleUserInteraction, { passive: true });
+    });
+
+    // Aggressive: Set up periodic reminder (every 2 minutes)
+    const setupPeriodicReminder = () => {
+      if (reminderTimer) {
+        clearInterval(reminderTimer);
+      }
+      
+      const timer = setInterval(() => {
+        if (!isInstalled && isInstallable && !showPrompt) {
+          const wasRecentlyDismissed = checkDismissalStatus();
+          if (!wasRecentlyDismissed) {
+            setShowPrompt(true);
+          }
+        }
+      }, 120000); // 2 minutes
+      
+      setReminderTimer(timer);
+    };
+
+    if (!isInstalled && isInstallable) {
+      setupPeriodicReminder();
+    }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
@@ -87,8 +133,14 @@ export const useInstallPrompt = (): InstallPromptState => {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
+      interactionEvents.forEach(event => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+      if (reminderTimer) {
+        clearInterval(reminderTimer);
+      }
     };
-  }, [isInstalled]);
+  }, [isInstalled, isInstallable, showPrompt, reminderTimer]);
 
   const installApp = async (): Promise<boolean> => {
     if (!deferredPrompt) {
@@ -128,11 +180,21 @@ export const useInstallPrompt = (): InstallPromptState => {
     localStorage.setItem('pwa-install-dismissed', new Date().toISOString());
   };
 
+  const triggerPromptOnInteraction = () => {
+    if (!isInstalled && isInstallable && !showPrompt) {
+      const wasRecentlyDismissed = checkDismissalStatus();
+      if (!wasRecentlyDismissed) {
+        setShowPrompt(true);
+      }
+    }
+  };
+
   return {
     isInstallable,
     isInstalled,
     showPrompt,
     installApp,
-    dismissPrompt
+    dismissPrompt,
+    triggerPromptOnInteraction
   };
 };

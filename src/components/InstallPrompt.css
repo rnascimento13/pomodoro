@@ -3,14 +3,15 @@
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  max-width: 400px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  box-shadow: 0 12px 48px rgba(197, 48, 48, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(197, 48, 48, 0.1);
+  max-width: 420px;
   width: calc(100vw - 40px);
   z-index: 1000;
-  animation: slideUp 0.3s ease-out;
+  animation: slideUpBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), pulse 3s infinite 2s;
+  backdrop-filter: blur(10px);
 }
 
 @keyframes slideUp {
@@ -21,6 +22,34 @@
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes slideUpBounce {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100px) scale(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateX(-50%) translateY(-10px) scale(1.05);
+  }
+  70% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(5px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 12px 48px rgba(197, 48, 48, 0.15), 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 0 16px 64px rgba(197, 48, 48, 0.25), 0 8px 24px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -112,20 +141,24 @@
 
 .install-button {
   flex: 1;
-  background: #c53030;
+  background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
   color: white;
   border: none;
-  border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all 0.2s ease;
-  min-height: 44px;
+  transition: all 0.3s ease;
+  min-height: 48px;
+  box-shadow: 0 4px 16px rgba(197, 48, 48, 0.3);
+  animation: buttonPulse 2s infinite;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .install-button:hover:not(:disabled) {
@@ -179,6 +212,17 @@
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+@keyframes buttonPulse {
+  0%, 100% {
+    box-shadow: 0 4px 16px rgba(197, 48, 48, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 6px 24px rgba(197, 48, 48, 0.5);
+    transform: scale(1.02);
+  }
 }
 
 .install-icon {
@@ -281,10 +325,14 @@
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .install-prompt {
-    animation: none;
+    animation: slideUp 0.3s ease-out;
   }
   
   .install-spinner {
+    animation: none;
+  }
+  
+  .install-button {
     animation: none;
   }
   

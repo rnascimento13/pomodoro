@@ -39,11 +39,11 @@ export const InstallPrompt: React.FC<InstallPromptProps> = ({ className = '' }) 
       <div className="install-prompt-content">
         <div className="install-prompt-header">
           <div className="install-prompt-icon">
-            📱
+            🚀
           </div>
           <div className="install-prompt-text">
-            <h3 id="install-title">Install Pomodoro Timer</h3>
-            <p>Add to your home screen for quick access and a better experience!</p>
+            <h3 id="install-title">⚡ Get the Full Experience!</h3>
+            <p><strong>Install now</strong> for instant access and premium features!</p>
           </div>
           <button
             className="install-prompt-close"
