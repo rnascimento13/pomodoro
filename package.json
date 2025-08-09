@@ -2,7 +2,7 @@
   "name": "pomodoro-pwa",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://YOUR_USERNAME.github.io/pomodoro-pwa",
+  "homepage": "https://rnascimento13.github.io/pomodoro",
   "dependencies": {
     "@types/node": "^16.18.0",
     "@types/react": "^18.0.0",
