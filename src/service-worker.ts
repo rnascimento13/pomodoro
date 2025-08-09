@@ -37,6 +37,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 // are fulfilled with your index.html shell. Learn more at
 // https://developers.google.com/web/fundamentals/architecture/app-shell
 const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
+
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }: { request: Request; url: URL }) => {
@@ -115,8 +116,8 @@ registerRoute(
 
 // Stale-while-revalidate for CSS and JS files
 registerRoute(
-  ({ request }) => 
-    request.destination === 'style' || 
+  ({ request }) =>
+    request.destination === 'style' ||
     request.destination === 'script',
   new StaleWhileRevalidate({
     cacheName: 'static-resources',
@@ -206,11 +207,11 @@ async function handleBackgroundSync() {
   try {
     // Get sync queue from IndexedDB or localStorage
     const syncQueue = await getSyncQueue();
-    
+
     if (syncQueue.length > 0) {
       // Process sync queue
       await processSyncQueue(syncQueue);
-      
+
       // Clear processed items
       await clearSyncQueue();
     }
