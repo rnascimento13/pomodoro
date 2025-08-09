@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { testServiceWorker, testCacheStorage, testServiceWorkerUpdate, testOfflineFunctionality, runServiceWorkerTests } from '../utils/sw-test';
+import React, { useState, useEffect, useCallback } from 'react';
+import { runServiceWorkerTests } from '../utils/sw-test';
 import PerformanceService from '../services/PerformanceService';
 import './PWATestSuite.css';
 
@@ -25,7 +25,7 @@ export const PWATestSuite: React.FC<PWATestSuiteProps> = ({ isOpen, onClose }) =
 
   const [activeTab, setActiveTab] = useState<'overview' | 'sw' | 'performance' | 'cache'>('overview');
 
-  const runTests = async () => {
+  const runTests = useCallback(async () => {
     setResults(prev => ({ ...prev, loading: true, error: null }));
     
     try {
@@ -49,13 +49,13 @@ export const PWATestSuite: React.FC<PWATestSuiteProps> = ({ isOpen, onClose }) =
         error: error instanceof Error ? error.message : 'Unknown error occurred'
       }));
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (isOpen && !results.serviceWorker && !results.loading) {
       runTests();
     }
-  }, [isOpen]);
+  }, [isOpen, results.serviceWorker, results.loading, runTests]);
 
   if (!isOpen) return null;
 
@@ -155,7 +155,7 @@ export const PWATestSuite: React.FC<PWATestSuiteProps> = ({ isOpen, onClose }) =
   const renderServiceWorkerTab = () => {
     if (!results.serviceWorker) return <div>No service worker data available</div>;
 
-    const { registration, cache, update, offline } = results.serviceWorker;
+    const { registration, cache, offline } = results.serviceWorker;
 
     return (
       <div className="sw-details">

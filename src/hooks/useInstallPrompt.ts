@@ -23,7 +23,7 @@ export const useInstallPrompt = (): InstallPromptState => {
   const [isInstallable, setIsInstallable] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
-  const [interactionCount, setInteractionCount] = useState(0);
+  const [, setInteractionCount] = useState(0);
   const [reminderTimer, setReminderTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Check if user previously dismissed the prompt
