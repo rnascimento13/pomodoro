@@ -63,51 +63,20 @@ registerRoute(
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')
 );
 
-// Cache-first strategy for static assets (images, fonts, etc.)
+// Cache-first strategy for static assets (images, fonts, audio)
 registerRoute(
-  ({ request }) => request.destination === 'image',
+  ({ request }) => 
+    request.destination === 'image' || 
+    request.destination === 'font' || 
+    request.destination === 'audio',
   new CacheFirst({
-    cacheName: 'images',
+    cacheName: 'static-assets',
     plugins: [
       new CacheableResponsePlugin({
         statuses: [0, 200],
       }),
       new ExpirationPlugin({
-        maxEntries: 60,
-        maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
-      }),
-    ],
-  })
-);
-
-// Cache-first strategy for fonts
-registerRoute(
-  ({ request }) => request.destination === 'font',
-  new CacheFirst({
-    cacheName: 'fonts',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 10,
-        maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-      }),
-    ],
-  })
-);
-
-// Cache-first strategy for audio files (notification sounds)
-registerRoute(
-  ({ request }) => request.destination === 'audio',
-  new CacheFirst({
-    cacheName: 'audio',
-    plugins: [
-      new CacheableResponsePlugin({
-        statuses: [0, 200],
-      }),
-      new ExpirationPlugin({
-        maxEntries: 20,
+        maxEntries: 50,
         maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
       }),
     ],

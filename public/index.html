@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
-    <meta name="theme-color" content="#e53e3e" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
+    <meta name="theme-color" content="#c53030" />
     <meta name="description" content="A simple, effective Pomodoro timer to boost your productivity" />
     
     <!-- Performance Optimizations -->
@@ -29,7 +29,7 @@
     <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/logo512.png" />
     
     <!-- Microsoft Tiles -->
-    <meta name="msapplication-TileColor" content="#e53e3e" />
+    <meta name="msapplication-TileColor" content="#c53030" />
     <meta name="msapplication-TileImage" content="%PUBLIC_URL%/logo192.png" />
     <meta name="msapplication-config" content="%PUBLIC_URL%/browserconfig.xml" />
     <meta name="msapplication-starturl" content="/" />
@@ -42,8 +42,15 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     
     <!-- Preload critical resources -->
-    <link rel="preload" href="%PUBLIC_URL%/sounds/work-complete.mp3" as="audio" type="audio/mpeg" />
-    <link rel="preload" href="%PUBLIC_URL%/sounds/break-complete.mp3" as="audio" type="audio/mpeg" />
+    <link rel="preload" href="%PUBLIC_URL%/sounds/work-complete.mp3" as="audio" type="audio/mpeg" crossorigin="anonymous" />
+    <link rel="preload" href="%PUBLIC_URL%/sounds/break-complete.mp3" as="audio" type="audio/mpeg" crossorigin="anonymous" />
+    
+    <!-- Preconnect to improve performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    
+    <!-- Resource hints for better performance -->
+    <link rel="prefetch" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="prefetch" href="%PUBLIC_URL%/logo512.png" />
     
     <!-- DNS Prefetch for external resources (if any) -->
     <!-- <link rel="dns-prefetch" href="//example.com"> -->

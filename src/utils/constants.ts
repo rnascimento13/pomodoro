@@ -29,9 +29,9 @@ export const SESSION_NAMES = {
   [SessionType.LONG_BREAK]: 'Long Break'
 } as const;
 
-// Color themes for different session types
+// Color themes for different session types (improved contrast)
 export const SESSION_COLORS = {
-  [SessionType.WORK]: '#e53e3e',
-  [SessionType.SHORT_BREAK]: '#38a169',
-  [SessionType.LONG_BREAK]: '#3182ce'
+  [SessionType.WORK]: '#c53030', // Darker red for better contrast
+  [SessionType.SHORT_BREAK]: '#2f855a', // Darker green for better contrast
+  [SessionType.LONG_BREAK]: '#2c5282' // Darker blue for better contrast
 } as const;
