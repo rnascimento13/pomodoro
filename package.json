@@ -2,6 +2,7 @@
   "name": "pomodoro-pwa",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://YOUR_USERNAME.github.io/pomodoro-pwa",
   "dependencies": {
     "@types/node": "^16.18.0",
     "@types/react": "^18.0.0",
@@ -45,7 +46,9 @@
     "optimize": "npm run build && node build-optimization.js",
     "optimize:full": "npm run build && npm run build:analyze && node build-optimization.js",
     "serve": "npx serve -s build",
-    "validate:pwa": "npm run build && node build-optimization.js"
+    "validate:pwa": "npm run build && node build-optimization.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
